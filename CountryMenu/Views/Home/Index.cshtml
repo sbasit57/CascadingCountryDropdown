@@ -1,0 +1,36 @@
+﻿@model CountryMenu.Models.CountryViewModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<br />
+<br />
+<div class="container">
+    <div class="form-group">
+        @if (ViewBag.CountryList != null)
+        {
+            @Html.DropDownListFor(model => model.CountryId, ViewBag.CountryList as SelectList, "== Select ==", new { @class = "form-control" })
+        }
+    </div>
+    <div class="form-group">
+
+        @Html.DropDownListFor(model => model.StateId, new SelectList(""), "== Select ==", new { @class = "form-control" })
+
+    </div>
+    
+</div>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#CountryId").change(function () {
+            $.get("/Home/GetStateList", { CountryId: $("#CountryId").val() }, function (data) {
+                $("#StateId").empty();
+                $.each(data, function (index, row) {
+                    $("#StateId").append("<option value='" +row.StateId + "'>"+ row.StateName +"</option> ")
+                });
+
+            });
+        })
+    });
+</script>
